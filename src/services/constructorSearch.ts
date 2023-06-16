@@ -14,6 +14,14 @@ class ConstructorSearch {
     });
   }
 
+  updateFav(constructorId: number, isFav: boolean): void {
+    const deletedConstructor = this.fuse.remove((constructor) => {
+      return constructor.constructorId === constructorId;
+    })[0];
+    deletedConstructor.isFavorite = isFav;
+    this.fuse.add(deletedConstructor);
+  }
+
   search(query: string): Constructor[] {
     return this.fuse.search(query, this.searchOptions).map((fuseResult) => fuseResult.item);
   }
