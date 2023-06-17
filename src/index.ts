@@ -35,11 +35,18 @@ api.get('/constructors', (req: Request, res: Response) => {
   return res.status(200).json(constructorSearch.search(req.query.q as string));
 });
 
+// TODO: global error handler to prevent stack trace leaks
+
 api.post('/constructors/updateFav', (req: Request, res: Response) => {
   // TODO: validate body with Joi
   const constructorSearch = api.get('constructorSearch') as ConstructorSearch;
   constructorSearch.updateFav(req.body.constructorId, req.body.fav);
-  return res.status(204).end();
+  return res.status(200).json({});
+});
+
+api.get('/constructors/favs', (req: Request, res: Response) => {
+  const constructorSearch = api.get('constructorSearch') as ConstructorSearch;
+  return res.status(200).json(constructorSearch.getFavs());
 });
 
 api.listen(port, () => {

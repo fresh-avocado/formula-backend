@@ -15,11 +15,16 @@ class ConstructorSearch {
   }
 
   updateFav(constructorId: number, isFav: boolean): void {
-    const deletedConstructor = this.fuse.remove((constructor) => {
-      return constructor.constructorId === constructorId;
-    })[0];
-    deletedConstructor.isFavorite = isFav;
-    this.fuse.add(deletedConstructor);
+    for (let i = 0; i < this.constructors.length; i++) {
+      if (this.constructors[i].constructorId === constructorId) {
+        this.constructors[i].isFavorite = isFav;
+        return; // no need to keep iterating
+      }
+    }
+  }
+
+  getFavs(): Constructor[] {
+    return this.constructors.filter((constructor) => constructor.isFavorite);
   }
 
   search(query: string): Constructor[] {
