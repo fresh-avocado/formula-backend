@@ -1,0 +1,17 @@
+FROM node:16
+
+WORKDIR /app
+
+COPY package.json .
+
+COPY yarn.lock .
+
+RUN yarn
+
+COPY . .
+
+ENV NODE_ENV=dev
+
+EXPOSE 8080
+
+CMD ["yarn", "dev"]
