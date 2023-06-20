@@ -11,12 +11,13 @@ class ConstructorSearch {
 
   // TODO: worker thread xq mucho trabajo en el main thread
 
-  constructor(constructors: Constructor[]) {
+  constructor(constructors: Constructor[], ttlMinutes: number = 0.1) {
     this.constructors = constructors;
     this.fuse = new Fuse(this.constructors, {
       keys: ['name'],
       threshold: 0.4,
     });
+    setInterval(() => this.revalidate(), ttlMinutes * 60_000);
   }
 
   async updateFav(constructorId: number, isFav: boolean): Promise<void> {

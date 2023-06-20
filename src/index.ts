@@ -96,13 +96,13 @@ api.post('/constructors/deleteAll', async (req: Request, res: Response) => {
   }
 });
 
-mongoose.connect(process.env.MONGO_CONNECTION_STRING as string, MONGOOSE_OPTIONS).then(async () => {
+mongoose.connect('mongodb://database:27017/formula', MONGOOSE_OPTIONS).then(async () => {
   logger.info('connection to mongo established!');
   api.listen(port, () => {
     api.set('constructorSearch', new ConstructorSearch([]));
     logger.info(`server is running at http://localhost:${port}`);
   });
 }).catch((err) => {
-  logger.error(`error connecting to mongoose: ${JSON.stringify(err, null, 2)}`);
+  logger.error(`error connecting to mongoose: ${(err as Error).message}`);
 });
 
