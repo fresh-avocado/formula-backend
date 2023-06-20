@@ -11,7 +11,8 @@ class ConstructorSearch {
 
   // TODO: worker thread xq mucho trabajo en el main thread
 
-  constructor(constructors: Constructor[], ttlMinutes: number = 0.1) {
+  constructor(constructors: Constructor[], ttlMinutes = 0.1) {
+    logger.debug('ConstructorSearch instantiated!');
     this.constructors = constructors;
     this.fuse = new Fuse(this.constructors, {
       keys: ['name'],
@@ -67,4 +68,4 @@ class ConstructorSearch {
   }
 }
 
-export default ConstructorSearch;
+export default new ConstructorSearch([]);
