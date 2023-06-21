@@ -1,8 +1,23 @@
-import { ReturnModelType, getModelForClass, prop } from "@typegoose/typegoose";
-import { FlattenMaps, Types } from "mongoose";
+import { ReturnModelType, Severity, getModelForClass, modelOptions, prop } from "@typegoose/typegoose";
+import mongoose, { FlattenMaps, Types } from "mongoose";
 
+interface Result {
+  raceId: number;
+  raceName: string;
+  driverId: number;
+  driverName: string;
+  position: number;
+}
+
+interface YearlyResult {
+  [year: number]: Result[];
+}
+
+@modelOptions({
+  options: { allowMixed: Severity.ALLOW }
+})
 export class Constructor {
-  private static defaultFields = ['-_id', '-__v'];
+  private static defaultFields = ['-_id'];
 
   @prop({ required: true, type: () => Number, unique: true })
   constructorId!: number;
@@ -22,13 +37,16 @@ export class Constructor {
   @prop({ type: () => Boolean, default: false })
   isFavorite?: boolean;
 
-  static async findAll(this: ReturnModelType<typeof Constructor>, extraFields?: (keyof Constructor)[]): Promise<(FlattenMaps<Constructor> & {
+  @prop({ type: () => mongoose.Schema.Types.Mixed, select: false })
+  yearlyResults!: YearlyResult;
+
+  static async findAll(this: ReturnModelType<typeof Constructor>, extraFields?: (`+${keyof Constructor}`)[]): Promise<(FlattenMaps<Constructor> & {
     _id: Types.ObjectId;
   })[]> {
     if (extraFields !== undefined) {
-      return this.find().lean().select(this.defaultFields.concat(extraFields));
+      return this.find().select(this.defaultFields.concat(extraFields)).lean();
     } else {
-      return this.find().lean().select(this.defaultFields);
+      return this.find().select(this.defaultFields).lean();
     }
   }
 

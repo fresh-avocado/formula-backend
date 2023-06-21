@@ -6,6 +6,8 @@ import mongoose from 'mongoose';
 import { MONGOOSE_OPTIONS } from './utils/constants/mongoose';
 import constructorController from './controllers/constructor/constructorController';
 import config from './services/config';
+import raceController from './controllers/race/raceController';
+import driverController from './controllers/driver/driverController';
 
 const logger = loggerService.child({ module: 'index.ts' });
 
@@ -26,7 +28,9 @@ api.get('/ping', (req: Request, res: Response) => {
   return res.status(200).send('pong');
 });
 
-api.use('/v1', constructorController);
+api.use('/v1/constructors', constructorController);
+api.use('/v1/races', raceController);
+api.use('/v1/drivers', driverController);
 
 mongoose.connect(mongoConnStr, MONGOOSE_OPTIONS).then(async () => {
   logger.info('connection to mongo established!');

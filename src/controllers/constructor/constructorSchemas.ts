@@ -14,6 +14,6 @@ type UpdateFavoriteBody = {
 }
 
 export const updateFavoriteBodySchema = Joi.object<UpdateFavoriteBody>({
-  constructorId: Joi.number().min(0).required(),
+  constructorId: Joi.number().min(1).required(),
   fav: Joi.boolean().required(),
 });
