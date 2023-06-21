@@ -19,10 +19,14 @@ export class Driver {
   @prop({ required: true, type: () => String }) // ideally, it should be an enum
   nationality!: string;
 
-  static async findAll(this: ReturnModelType<typeof Driver>): Promise<(FlattenMaps<Driver> & {
+  static async findAll(this: ReturnModelType<typeof Driver>, extraFields?: (keyof Driver)[]): Promise<(FlattenMaps<Driver> & {
     _id: Types.ObjectId;
   })[]> {
-    return await this.find().lean().select(this.defaultFields);
+    if (extraFields !== undefined) {
+      return await this.find().lean().select(this.defaultFields.concat(extraFields));
+    } else {
+      return await this.find().lean().select(this.defaultFields);
+    }
   }
 
   static async getById(this: ReturnModelType<typeof Driver>, driverId: number, extraFields?: (keyof Driver)[]): Promise<(FlattenMaps<Driver> & {
