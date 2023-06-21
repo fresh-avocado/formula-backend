@@ -54,7 +54,7 @@ constructorController.post('/deleteAll', async (req: Request, res: Response) => 
   }
 });
 
-constructorController.get('/results', validateBody(getConstructorResultsSchema), async (req: Request, res: Response) => {
+constructorController.post('/results', validateBody(getConstructorResultsSchema), async (req: Request, res: Response) => {
   try {
     const results = await ConstructorModel.getResults(req.body);
     return res.status(200).json(results);
