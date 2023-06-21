@@ -24,6 +24,16 @@ export class Driver {
   })[]> {
     return await this.find().lean().select(this.defaultFields);
   }
+
+  static async getById(this: ReturnModelType<typeof Driver>, driverId: number, extraFields?: (keyof Driver)[]): Promise<(FlattenMaps<Driver> & {
+    _id: Types.ObjectId;
+  }) | null> {
+    if (extraFields !== undefined) {
+      return await this.findOne({ driverId }).select(this.defaultFields.concat(extraFields)).lean();
+    } else {
+      return await this.findOne({ driverId }).select(this.defaultFields).lean();
+    }
+  }
 }
 
 export const DriverModel = getModelForClass(Driver);

@@ -1,6 +1,6 @@
 import Joi from "joi";
 
-type GetConstructorsQuery = {
+export type GetConstructorsQuery = {
   q: string;
 }
 
@@ -8,7 +8,7 @@ export const getConstructorsQuerySchema = Joi.object<GetConstructorsQuery>({
   q: Joi.string().min(2).max(20).required(),
 });
 
-type UpdateFavoriteBody = {
+export type UpdateFavoriteBody = {
   constructorId: number;
   fav: boolean;
 }

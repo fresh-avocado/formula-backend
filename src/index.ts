@@ -1,13 +1,13 @@
 import express, { Express, Request, Response } from 'express';
-
 import loggerService from './services/logger';
 import cors from 'cors';
 import mongoose from 'mongoose';
 import { MONGOOSE_OPTIONS } from './utils/constants/mongoose';
-import constructorController from './controllers/constructor/constructorController';
+import constructorController from './modules/constructor/constructorController';
 import config from './services/config';
-import raceController from './controllers/race/raceController';
-import driverController from './controllers/driver/driverController';
+import raceController from './modules/race/raceController';
+import driverController from './modules/driver/driverController';
+import resultsController from './modules/results/resultsController';
 
 const logger = loggerService.child({ module: 'index.ts' });
 
@@ -31,6 +31,7 @@ api.get('/ping', (req: Request, res: Response) => {
 api.use('/v1/constructors', constructorController);
 api.use('/v1/races', raceController);
 api.use('/v1/drivers', driverController);
+api.use('/v1/results', resultsController);
 
 mongoose.connect(mongoConnStr, MONGOOSE_OPTIONS).then(async () => {
   logger.info('connection to mongo established!');

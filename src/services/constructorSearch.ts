@@ -57,13 +57,12 @@ class ConstructorSearch {
   async revalidate(): Promise<void> {
     logger.info('revalidating constructors cache...');
     try {
-      const freshData = await ConstructorModel.findAll(['+yearlyResults']) as Constructor[];
+      const freshData = await ConstructorModel.findAll() as Constructor[];
       this.constructors = freshData;
       this.fuse.setCollection(freshData);
-      logger.info('cache revalidated!');
+      logger.info(`cache revalidated with ${freshData.length} new entries!`);
     } catch (error) {
-      logger.error(`${(error as Error).message}`);
-      logger.error(`revalidate(): ${JSON.stringify(error, null, 2)}`);
+      logger.error(`revalidate(): ${(error as Error).message}`);
     }
   }
 }

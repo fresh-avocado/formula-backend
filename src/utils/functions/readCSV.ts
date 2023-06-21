@@ -1,10 +1,11 @@
 import fs from "fs";
+import path from "path";
 import { parse } from "csv-parse";
 
-export const readCSV = async <T>(filename: string, rowToType: (row: string[]) => T | undefined): Promise<T[]> => {
+export const readCSV = async <T>(absolutePath: string, rowToType: (row: string[]) => T | undefined): Promise<T[]> => {
   return new Promise((resolve, reject) => {
     const result: T[] = [];
-    fs.createReadStream(filename).pipe(parse({ delimiter: ",", from_line: 2 }))
+    fs.createReadStream(path.resolve(process.cwd(), absolutePath)).pipe(parse({ delimiter: ",", from_line: 2 }))
       .on("data", (row) => {
         const t = rowToType(row);
         if (t !== undefined) {

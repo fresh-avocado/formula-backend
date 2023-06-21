@@ -19,10 +19,14 @@ export class Race {
     return await this.find().lean().select(this.defaultFields);
   }
 
-  static async getNameById(this: ReturnModelType<typeof Race>, raceId: number): Promise<(FlattenMaps<Race> & {
+  static async getById(this: ReturnModelType<typeof Race>, raceId: number, extraFields?: (keyof Race)[]): Promise<(FlattenMaps<Race> & {
     _id: Types.ObjectId;
   }) | null> {
-    return await this.findOne({ raceId }).select(this.defaultFields).select('name').lean();
+    if (extraFields !== undefined) {
+      return await this.findOne({ raceId }).select(this.defaultFields.concat(extraFields)).lean();
+    } else {
+      return await this.findOne({ raceId }).select(this.defaultFields).lean();
+    }
   }
 }
 

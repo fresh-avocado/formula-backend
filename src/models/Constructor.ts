@@ -1,7 +1,7 @@
 import { ReturnModelType, Severity, getModelForClass, modelOptions, prop } from "@typegoose/typegoose";
 import mongoose, { FlattenMaps, Types } from "mongoose";
 
-interface Result {
+type Result = {
   raceId: number;
   raceName: string;
   driverId: number;
@@ -9,7 +9,7 @@ interface Result {
   position: number;
 }
 
-interface YearlyResult {
+type YearlyResult = {
   [year: number]: Result[];
 }
 
@@ -25,22 +25,22 @@ export class Constructor {
   @prop({ required: true, type: () => String })
   name!: string;
 
-  @prop({ required: true, type: () => String, select: false })
+  @prop({ required: true, type: () => String })
   constructorRef!: string;
 
-  @prop({ required: true, type: () => String, select: false })
+  @prop({ required: true, type: () => String })
   nationality!: string;
 
-  @prop({ required: true, type: () => String, select: false })
+  @prop({ required: true, type: () => String })
   url!: string;
 
   @prop({ type: () => Boolean, default: false })
   isFavorite?: boolean;
 
-  @prop({ type: () => mongoose.Schema.Types.Mixed, select: false })
+  @prop({ type: () => mongoose.Schema.Types.Mixed })
   yearlyResults!: YearlyResult;
 
-  static async findAll(this: ReturnModelType<typeof Constructor>, extraFields?: (`+${keyof Constructor}`)[]): Promise<(FlattenMaps<Constructor> & {
+  static async findAll(this: ReturnModelType<typeof Constructor>, extraFields?: (keyof Constructor)[]): Promise<(FlattenMaps<Constructor> & {
     _id: Types.ObjectId;
   })[]> {
     if (extraFields !== undefined) {
@@ -57,6 +57,15 @@ export class Constructor {
       throw new Error(`constructor with constructorId = ${constructorId} does not exist`);
     } else {
       return;
+    }
+  }
+
+  static async addResult(this: ReturnModelType<typeof Constructor>, { constructorId, year, result }: { constructorId: number, year: number, result: Result }): Promise<Constructor> {
+    try {
+      const res = await this.findOneAndUpdate({ constructorId }, { $push: { [`yearlyResults.${year}`]: result } }, { new: true }).lean();
+      return res as Constructor;
+    } catch (error) {
+      throw new Error((error as Error).message);
     }
   }
 }
