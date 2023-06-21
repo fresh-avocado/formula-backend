@@ -57,7 +57,7 @@ class ConstructorSearch {
   async revalidate(): Promise<void> {
     logger.info('revalidating constructors cache...');
     try {
-      const freshData = await ConstructorModel.findAll() as Constructor[];
+      const freshData = await ConstructorModel.findAll(['constructorId', 'name', 'isFavorite']) as Constructor[];
       this.constructors = freshData;
       this.fuse.setCollection(freshData);
       logger.info(`cache revalidated with ${freshData.length} new entries!`);

@@ -68,6 +68,15 @@ export class Constructor {
       throw new Error((error as Error).message);
     }
   }
+
+  static async getResults(this: ReturnModelType<typeof Constructor>, { constructorId, year }: { constructorId: number, year: number }): Promise<Result[]> {
+    const res = await this.findOne({ constructorId }).select(this.defaultFields.concat([`yearlyResults.${year}`])).lean();
+    if (res !== null) {
+      return res.yearlyResults[year];
+    } else {
+      throw new Error(`could not find Constructor with constructorId = ${constructorId}`);
+    }
+  }
 }
 
 export const ConstructorModel = getModelForClass(Constructor);

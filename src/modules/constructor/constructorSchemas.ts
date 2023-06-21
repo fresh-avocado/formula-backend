@@ -17,3 +17,13 @@ export const updateFavoriteBodySchema = Joi.object<UpdateFavoriteBody>({
   constructorId: Joi.number().min(1).required(),
   fav: Joi.boolean().required(),
 });
+
+export type GetConstructorResults = {
+  year: number;
+  constructorId: number;
+};
+
+export const getConstructorResultsSchema = Joi.object<GetConstructorResults>({
+  year: Joi.number().min(2010).max(2020).required(),
+  constructorId: Joi.number().min(1).required(),
+});

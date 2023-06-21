@@ -22,13 +22,4 @@ raceController.get('/all', async (req: Request, res: Response) => {
   return res.status(200).json(races);
 });
 
-// TODO: tipar query
-raceController.get('/', async (req: Request, res: Response) => {
-  if (req.query.raceId) {
-    return res.status(200).json(await RaceModel.getById(+req.query.raceId, ['year']));
-  } else {
-    return res.status(500).json({});
-  }
-});
-
 export default raceController;

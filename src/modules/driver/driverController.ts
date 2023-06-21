@@ -22,12 +22,4 @@ driverController.get('/all', async (req: Request, res: Response) => {
   return res.status(200).json(races);
 });
 
-driverController.get('/', async (req: Request, res: Response) => {
-  if (req.query.driverId) {
-    return res.status(200).json(await DriverModel.getById(+req.query.driverId, ['foreName']));
-  } else {
-    return res.status(500).json({});
-  }
-});
-
 export default driverController;
