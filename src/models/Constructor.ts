@@ -1,5 +1,6 @@
 import { ReturnModelType, Severity, getModelForClass, modelOptions, prop } from "@typegoose/typegoose";
 import mongoose, { FlattenMaps, Types } from "mongoose";
+import logger from "../services/logger";
 
 type Result = {
   raceId: number;
@@ -37,7 +38,7 @@ export class Constructor {
   @prop({ type: () => Boolean, default: false })
   isFavorite?: boolean;
 
-  @prop({ type: () => mongoose.Schema.Types.Mixed })
+  @prop({ required: true, type: () => mongoose.Schema.Types.Mixed })
   yearlyResults!: YearlyResult;
 
   static async findAll(this: ReturnModelType<typeof Constructor>, extraFields?: (keyof Constructor)[]): Promise<(FlattenMaps<Constructor> & {
@@ -72,7 +73,13 @@ export class Constructor {
   static async getResults(this: ReturnModelType<typeof Constructor>, { constructorId, year }: { constructorId: number, year: number }): Promise<Result[]> {
     const res = await this.findOne({ constructorId }).select(this.defaultFields.concat([`yearlyResults.${year}`])).lean();
     if (res !== null) {
-      return res.yearlyResults[year];
+      logger.info(`yearlyResults: ${JSON.stringify(res.yearlyResults, null, 2)}`);
+      const results = res.yearlyResults[year];
+      if (results === undefined) {
+        return [];
+      } else {
+        return results;
+      }
     } else {
       throw new Error(`could not find Constructor with constructorId = ${constructorId}`);
     }

@@ -59,7 +59,8 @@ constructorController.post('/results', validateBody(getConstructorResultsSchema)
     const results = await ConstructorModel.getResults(req.body);
     return res.status(200).json(results);
   } catch (error) {
-    logger.error(`/constructors/results: ${JSON.stringify(error, null, 2)}`);
+    const errMsg = (error as Error).message;
+    logger.error(`/constructors/results: ${errMsg}`);
     return res.status(500).json({ msg: 'internal server error' });
   }
 });

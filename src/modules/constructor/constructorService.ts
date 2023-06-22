@@ -11,7 +11,7 @@ export const resetConstructors = async (): Promise<Constructor[]> => {
       name: row[2],
       nationality: row[3],
       url: row[4],
-      yearlyResults: {},
+      yearlyResults: { 2010: [] },
     }))
   ]);
   await ConstructorModel.create(constructors);
